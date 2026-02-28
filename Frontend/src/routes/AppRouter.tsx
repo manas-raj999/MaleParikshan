@@ -3,14 +3,24 @@ import LandingPage from '../pages/LandingPage'
 import LoginPage from '../pages/LoginPage'
 import RegisterPage from '../pages/RegisterPage'
 import OnboardingPage from '../pages/OnboardingPage'
+import HomePage from '../pages/HomePage'
 import DashboardPage from '../pages/DashboardPage'
 import StreakPage from '../pages/StreakPage'
 import MoodPage from '../pages/MoodPage'
-import ModulesPage from '../pages/ModulesPage'
+import LearnPage from '../pages/LearnPage'
 import ChatPage from '../pages/ChatPage'
 import AdultModePage from '../pages/AdultModePage'
+import ProfilePage from '../pages/ProfilePage'
 import ProtectedRoute from './ProtectedRoute'
 import AppLayout from '../layouts/AppLayout'
+
+function Protected({ children }: { children: React.ReactNode }) {
+  return (
+    <ProtectedRoute>
+      <AppLayout>{children}</AppLayout>
+    </ProtectedRoute>
+  )
+}
 
 export default function AppRouter() {
   return (
@@ -19,78 +29,18 @@ export default function AppRouter() {
       <Route path="/" element={<LandingPage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
+      <Route path="/onboarding" element={<ProtectedRoute><OnboardingPage /></ProtectedRoute>} />
 
-      {/* Onboarding (requires auth) */}
-      <Route
-        path="/onboarding"
-        element={
-          <ProtectedRoute>
-            <OnboardingPage />
-          </ProtectedRoute>
-        }
-      />
-
-      {/* App pages (requires auth + layout) */}
-      <Route
-        path="/dashboard"
-        element={
-          <ProtectedRoute>
-            <AppLayout>
-              <DashboardPage />
-            </AppLayout>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/streak"
-        element={
-          <ProtectedRoute>
-            <AppLayout>
-              <StreakPage />
-            </AppLayout>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/mood"
-        element={
-          <ProtectedRoute>
-            <AppLayout>
-              <MoodPage />
-            </AppLayout>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/modules"
-        element={
-          <ProtectedRoute>
-            <AppLayout>
-              <ModulesPage />
-            </AppLayout>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/chat"
-        element={
-          <ProtectedRoute>
-            <AppLayout>
-              <ChatPage />
-            </AppLayout>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/adult"
-        element={
-          <ProtectedRoute>
-            <AppLayout>
-              <AdultModePage />
-            </AppLayout>
-          </ProtectedRoute>
-        }
-      />
+      {/* App */}
+      <Route path="/home" element={<Protected><HomePage /></Protected>} />
+      <Route path="/dashboard" element={<Protected><DashboardPage /></Protected>} />
+      <Route path="/streak" element={<Protected><StreakPage /></Protected>} />
+      <Route path="/mood" element={<Protected><MoodPage /></Protected>} />
+      <Route path="/learn" element={<Protected><LearnPage /></Protected>} />
+      <Route path="/modules" element={<Protected><LearnPage /></Protected>} />
+      <Route path="/chat" element={<Protected><ChatPage /></Protected>} />
+      <Route path="/adult" element={<Protected><AdultModePage /></Protected>} />
+      <Route path="/profile" element={<Protected><ProfilePage /></Protected>} />
 
       {/* Fallback */}
       <Route path="*" element={<Navigate to="/" replace />} />

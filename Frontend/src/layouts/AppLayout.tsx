@@ -1,109 +1,49 @@
-import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { useTranslation } from '../hooks/useTranslation'
 
-const navItems = [
-  { key: 'dashboard', path: '/dashboard', icon: '⬡' },
-  { key: 'modules', path: '/modules', icon: '◈' },
-  { key: 'streak', path: '/streak', icon: '◉' },
-  { key: 'mood', path: '/mood', icon: '◎' },
-  { key: 'chat', path: '/chat', icon: '◐' },
+const NAV_ITEMS = [
+  { path: '/home', icon: '🏠', label: 'Home' },
+  { path: '/learn', icon: '📖', label: 'Learn' },
+  { path: '/dashboard', icon: '📊', label: 'Dashboard' },
+  { path: '/chat', icon: '💬', label: 'Chat' },
+  { path: '/profile', icon: '👤', label: 'Profile' },
 ]
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
-  const { user, logout } = useAuth()
-  const { t } = useTranslation()
   const location = useLocation()
   const navigate = useNavigate()
 
-  const handleLogout = () => {
-    logout()
-    navigate('/login')
-  }
-
   return (
-    <div className="flex min-h-screen bg-obsidian">
-      {/* Sidebar */}
-      <aside className="w-64 bg-surface border-r border-border flex flex-col fixed h-screen z-10">
-        {/* Logo */}
-        <div className="p-6 border-b border-border">
-          <Link to="/dashboard">
-            <h1 className="font-display text-xl font-bold text-gradient">
-              {t('app.name')}
-            </h1>
-            <p className="text-xs text-muted mt-1 font-body leading-tight">
-              {t('app.tagline')}
-            </p>
-          </Link>
-        </div>
+    <div style={{ minHeight: '100vh', background: '#0d0f1a' }}>
+      {/* Main content */}
+      <main>
+        {children}
+      </main>
 
-        {/* Nav */}
-        <nav className="flex-1 p-4 space-y-1">
-          {navItems.map((item) => {
-            const isActive = location.pathname.startsWith(item.path)
+      {/* Bottom Navigation */}
+      <div className="bottom-nav">
+        <div className="bottom-nav-inner">
+          {NAV_ITEMS.map((item) => {
+            const isActive = location.pathname === item.path ||
+              (item.path === '/home' && location.pathname === '/') ||
+              (item.path === '/learn' && location.pathname.startsWith('/modules')) ||
+              (item.path === '/learn' && location.pathname.startsWith('/learn')) ||
+              (item.path === '/dashboard' && location.pathname === '/dashboard') ||
+              (item.path === '/chat' && location.pathname === '/chat') ||
+              (item.path === '/profile' && location.pathname === '/profile')
             return (
-              <Link
-                key={item.key}
-                to={item.path}
-                className={`flex items-center gap-3 px-4 py-3 rounded-xl font-display font-medium text-sm transition-all duration-200 ${
-                  isActive
-                    ? 'bg-accent/10 text-accent border border-accent/20'
-                    : 'text-muted hover:text-white hover:bg-elevated'
-                }`}
+              <button
+                key={item.path}
+                onClick={() => navigate(item.path === '/home' ? '/home' : item.path)}
+                className={`nav-item ${isActive ? 'active' : ''}`}
               >
-                <span className="text-base">{item.icon}</span>
-                {t(`nav.${item.key}`)}
-              </Link>
+                <span>{item.icon}</span>
+                {item.label}
+              </button>
             )
           })}
-
-          {/* Adult Mode */}
-          {user?.age && user.age >= 18 && (
-            <Link
-              to="/adult"
-              className={`flex items-center gap-3 px-4 py-3 rounded-xl font-display font-medium text-sm transition-all duration-200 ${
-                location.pathname === '/adult'
-                  ? 'bg-gold/10 text-gold border border-gold/20'
-                  : 'text-muted hover:text-white hover:bg-elevated'
-              }`}
-            >
-              <span className="text-base">◈</span>
-              {t('adult.title')}
-            </Link>
-          )}
-        </nav>
-
-        {/* User section */}
-        <div className="p-4 border-t border-border">
-          <div className="flex items-center gap-3 px-2 py-2 mb-2">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-accent to-gold flex items-center justify-center text-xs font-display font-bold text-white">
-              {user?.email?.[0]?.toUpperCase() || 'G'}
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-display font-medium text-white truncate">
-                {user?.email || 'Guest User'}
-              </p>
-              <p className="text-xs text-muted">
-                Age {user?.age || '—'}
-              </p>
-            </div>
-          </div>
-          <button
-            onClick={handleLogout}
-            className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-muted hover:text-white hover:bg-elevated font-display font-medium text-sm transition-all duration-200"
-          >
-            <span>↩</span>
-            {t('nav.logout')}
-          </button>
         </div>
-      </aside>
-
-      {/* Main content */}
-      <main className="flex-1 ml-64 overflow-y-auto min-h-screen">
-        <div className="max-w-5xl mx-auto p-8">
-          {children}
-        </div>
-      </main>
+      </div>
     </div>
   )
 }

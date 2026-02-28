@@ -1,227 +1,127 @@
 import { useEffect, useState } from 'react'
 import { moodService } from '../services/moodService'
 import type { MoodType, MoodReport } from '../types'
-import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, BarChart, Bar, XAxis, YAxis } from 'recharts'
-import { useTranslation } from '../hooks/useTranslation'
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, BarChart, Bar, XAxis } from 'recharts'
 
 const MOODS: { type: MoodType; emoji: string; label: string; color: string }[] = [
-  { type: 'happy', emoji: '😊', label: 'Happy', color: '#2dd4bf' },
-  { type: 'calm', emoji: '😌', label: 'Calm', color: '#60a5fa' },
-  { type: 'focused', emoji: '🎯', label: 'Focused', color: '#a78bfa' },
-  { type: 'tired', emoji: '😴', label: 'Tired', color: '#94a3b8' },
-  { type: 'anxious', emoji: '😰', label: 'Anxious', color: '#fbbf24' },
+  { type: 'happy', emoji: '😊', label: 'Happy', color: '#4ade80' },
+  { type: 'calm', emoji: '😌', label: 'Calm', color: '#00d4ff' },
+  { type: 'focused', emoji: '🎯', label: 'Focused', color: '#4d7cff' },
+  { type: 'tired', emoji: '😴', label: 'Tired', color: '#9ca3af' },
+  { type: 'anxious', emoji: '😰', label: 'Anxious', color: '#ffb830' },
   { type: 'sad', emoji: '😢', label: 'Sad', color: '#818cf8' },
-  { type: 'angry', emoji: '😠', label: 'Angry', color: '#f87171' },
+  { type: 'angry', emoji: '😠', label: 'Angry', color: '#ff4d6a' },
 ]
 
-const MOOD_COLORS: Record<MoodType, string> = {
-  happy: '#2dd4bf',
-  calm: '#60a5fa',
-  focused: '#a78bfa',
-  tired: '#94a3b8',
-  anxious: '#fbbf24',
-  sad: '#818cf8',
-  angry: '#f87171',
-}
+const COLORS: Record<MoodType, string> = { happy:'#4ade80',calm:'#00d4ff',focused:'#4d7cff',tired:'#9ca3af',anxious:'#ffb830',sad:'#818cf8',angry:'#ff4d6a' }
 
 export default function MoodPage() {
-  const { t } = useTranslation()
-  const [selectedMood, setSelectedMood] = useState<MoodType | null>(null)
+  const [selected, setSelected] = useState<MoodType | null>(null)
   const [logged, setLogged] = useState(false)
   const [report, setReport] = useState<MoodReport | null>(null)
   const [loading, setLoading] = useState(false)
   const [reportLoading, setReportLoading] = useState(true)
-  const [error, setError] = useState('')
 
   useEffect(() => {
-    moodService.getReport()
-      .then(setReport)
-      .catch(() => {})
-      .finally(() => setReportLoading(false))
+    moodService.getReport().then(setReport).catch(() => {}).finally(() => setReportLoading(false))
   }, [])
 
   const handleLog = async () => {
-    if (!selectedMood) return
+    if (!selected) return
     setLoading(true)
-    setError('')
-    try {
-      await moodService.log(selectedMood)
-      setLogged(true)
-    } catch {
-      setError('Failed to log mood. Please try again.')
-    } finally {
-      setLoading(false)
-    }
+    try { await moodService.log(selected) } catch {}
+    setLogged(true); setLoading(false)
   }
 
-  const pieData = report
-    ? Object.entries(report.distribution)
-        .filter(([, v]) => v > 0)
-        .map(([mood, count]) => ({
-          name: mood,
-          value: count,
-          color: MOOD_COLORS[mood as MoodType],
-        }))
-    : []
-
-  const barData = report?.weeklyTrend?.slice(-7).map((entry, i) => ({
-    day: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][
-      new Date(entry.date).getDay()
-    ] || `D${i + 1}`,
-    mood: entry.mood,
-    value: 1,
-    fill: MOOD_COLORS[entry.mood],
-  })) || []
+  const pieData = report ? Object.entries(report.distribution).filter(([,v]) => v > 0).map(([mood, count]) => ({ name: mood, value: count, color: COLORS[mood as MoodType] })) : []
 
   return (
-    <div className="space-y-8 animate-fade-up">
-      <div>
-        <h1 className="font-display text-3xl font-bold text-white mb-2">{t('mood.title')}</h1>
-        <p className="text-muted font-body text-sm">Track your emotional state daily</p>
+    <div className="page-content animate-fade-up">
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <span style={{ fontSize: '1.3rem' }}>😊</span>
+          <span style={{ fontFamily: 'Outfit', fontSize: '1.3rem', fontWeight: 700 }}>Mood Tracker</span>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <span>🌿</span>
+          <span style={{ fontFamily: 'Outfit', fontSize: '0.95rem', fontWeight: 600, color: '#8ecfcc' }}>Male Parikshan</span>
+        </div>
       </div>
 
       {/* Daily log */}
-      <div className="card">
-        <h2 className="font-display text-lg font-semibold text-white mb-2">
-          {logged ? t('mood.alreadyLogged') : t('mood.logToday')}
-        </h2>
-
+      <div className="card" style={{ marginBottom: '1rem' }}>
         {logged ? (
-          <div className="text-center py-8">
-            <p className="text-5xl mb-4">{MOODS.find(m => m.type === selectedMood)?.emoji}</p>
-            <p className="font-display text-lg font-semibold text-teal">Mood logged successfully!</p>
-            <p className="text-muted text-sm font-body mt-2">Come back tomorrow to log again.</p>
+          <div style={{ textAlign: 'center', padding: '1.5rem 0' }}>
+            <span style={{ fontSize: '3rem', display: 'block', marginBottom: '0.75rem' }}>{MOODS.find(m => m.type === selected)?.emoji}</span>
+            <p style={{ fontFamily: 'Outfit', fontSize: '1rem', fontWeight: 700, color: '#4ade80' }}>Mood logged!</p>
+            <p style={{ fontFamily: 'Nunito', fontSize: '0.8rem', color: '#5a6190', marginTop: '0.25rem' }}>Come back tomorrow.</p>
           </div>
         ) : (
           <>
-            <p className="text-muted text-sm font-body mb-6">Select your current mood</p>
-            <div className="grid grid-cols-7 gap-2 mb-6">
-              {MOODS.map((m) => (
-                <button
-                  key={m.type}
-                  onClick={() => setSelectedMood(m.type)}
-                  className={`flex flex-col items-center gap-2 py-4 rounded-xl border transition-all duration-200 ${
-                    selectedMood === m.type
-                      ? 'bg-elevated border-accent scale-105'
-                      : 'bg-surface border-border hover:border-subtle'
-                  }`}
-                >
-                  <span className="text-3xl">{m.emoji}</span>
-                  <span className="text-xs font-body text-muted">{m.label}</span>
+            <p style={{ fontFamily: 'Outfit', fontSize: '1rem', fontWeight: 700, marginBottom: '0.85rem' }}>How are you feeling today?</p>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.5rem', marginBottom: '1rem' }}>
+              {MOODS.map(m => (
+                <button key={m.type} onClick={() => setSelected(m.type)} style={{
+                  display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.35rem',
+                  padding: '0.75rem 0.5rem', borderRadius: '0.85rem',
+                  background: selected === m.type ? m.color + '22' : '#1e2340',
+                  border: `1px solid ${selected === m.type ? m.color + '66' : '#252a4a'}`,
+                  cursor: 'pointer', transition: 'all 0.2s',
+                  boxShadow: selected === m.type ? `0 0 12px ${m.color}33` : 'none'
+                }}>
+                  <span style={{ fontSize: '1.6rem' }}>{m.emoji}</span>
+                  <span style={{ fontFamily: 'Nunito', fontSize: '0.7rem', color: selected === m.type ? m.color : '#5a6190' }}>{m.label}</span>
                 </button>
               ))}
             </div>
-
-            {error && <p className="text-red-400 text-sm font-body mb-4">{error}</p>}
-
-            <button
-              onClick={handleLog}
-              disabled={!selectedMood || loading}
-              className="btn-primary py-4 px-8 disabled:opacity-50"
-            >
+            <button onClick={handleLog} disabled={!selected || loading} className="btn-primary" style={{ width: '100%', opacity: selected ? 1 : 0.4 }}>
               {loading ? 'Logging...' : 'Log Mood'}
             </button>
           </>
         )}
       </div>
 
-      {/* Weekly report */}
-      <div>
-        <h2 className="font-display text-xl font-bold text-white mb-4">{t('mood.report')}</h2>
-
-        {reportLoading ? (
-          <div className="flex items-center justify-center h-32">
-            <div className="w-6 h-6 border-2 border-accent border-t-transparent rounded-full animate-spin" />
-          </div>
-        ) : report ? (
-          <div className="grid grid-cols-2 gap-4">
-            {/* Pie chart */}
-            <div className="card">
-              <h3 className="font-display text-sm font-semibold text-muted uppercase tracking-widest mb-4">
-                {t('mood.distribution')}
-              </h3>
-              {pieData.length > 0 ? (
-                <>
-                  <ResponsiveContainer width="100%" height={180}>
-                    <PieChart>
-                      <Pie
-                        data={pieData}
-                        cx="50%"
-                        cy="50%"
-                        innerRadius={50}
-                        outerRadius={80}
-                        paddingAngle={3}
-                        dataKey="value"
-                      >
-                        {pieData.map((entry, index) => (
-                          <Cell key={index} fill={entry.color} />
-                        ))}
-                      </Pie>
-                      <Tooltip
-                        contentStyle={{ background: '#1a1a24', border: '1px solid #2a2a38', borderRadius: '8px', color: '#fff' }}
-                      />
-                    </PieChart>
-                  </ResponsiveContainer>
-                  <div className="grid grid-cols-2 gap-2 mt-2">
-                    {pieData.map((entry) => (
-                      <div key={entry.name} className="flex items-center gap-2">
-                        <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: entry.color }} />
-                        <span className="text-xs text-muted font-body capitalize">{entry.name} ({entry.value})</span>
-                      </div>
-                    ))}
-                  </div>
-                </>
-              ) : (
-                <p className="text-muted text-sm font-body text-center py-8">No data yet</p>
-              )}
-            </div>
-
-            {/* Bar chart */}
-            <div className="card">
-              <h3 className="font-display text-sm font-semibold text-muted uppercase tracking-widest mb-4">
-                Weekly Trend
-              </h3>
-              {barData.length > 0 ? (
-                <ResponsiveContainer width="100%" height={200}>
-                  <BarChart data={barData} barSize={20}>
-                    <XAxis dataKey="day" tick={{ fill: '#6b6b80', fontSize: 11, fontFamily: 'DM Sans' }} axisLine={false} tickLine={false} />
-                    <YAxis hide />
-                    <Tooltip
-                      formatter={(_, __, props) => [props.payload.mood, 'Mood']}
-                      contentStyle={{ background: '#1a1a24', border: '1px solid #2a2a38', borderRadius: '8px', color: '#fff' }}
-                    />
-                    <Bar dataKey="value" radius={[4, 4, 0, 0]}>
-                      {barData.map((entry, i) => (
-                        <Cell key={i} fill={entry.fill} />
-                      ))}
-                    </Bar>
-                  </BarChart>
-                </ResponsiveContainer>
-              ) : (
-                <p className="text-muted text-sm font-body text-center py-8">No trend data yet</p>
-              )}
-            </div>
-
-            {/* Dominant mood */}
-            {report.dominantMood && (
-              <div className="col-span-2 card border-gradient">
-                <p className="text-muted text-xs font-body uppercase tracking-widest mb-2">Most Common Mood</p>
-                <div className="flex items-center gap-4">
-                  <span className="text-4xl">{MOODS.find(m => m.type === report.dominantMood)?.emoji}</span>
-                  <div>
-                    <p className="font-display text-xl font-bold text-white capitalize">{report.dominantMood}</p>
-                    <p className="text-muted text-sm font-body">This has been your dominant emotional state</p>
-                  </div>
+      {/* Report */}
+      <p style={{ fontFamily: 'Outfit', fontSize: '1rem', fontWeight: 700, marginBottom: '0.75rem' }}>Weekly Report</p>
+      {reportLoading ? (
+        <div style={{ display: 'flex', justifyContent: 'center', padding: '2rem' }}>
+          <div style={{ width: 24, height: 24, border: '2px solid #4d7cff', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
+        </div>
+      ) : report && pieData.length > 0 ? (
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+          <div className="card">
+            <p style={{ fontFamily: 'Outfit', fontSize: '0.75rem', fontWeight: 600, color: '#5a6190', letterSpacing: '0.05em', marginBottom: '0.5rem' }}>DISTRIBUTION</p>
+            <ResponsiveContainer width="100%" height={160}>
+              <PieChart>
+                <Pie data={pieData} cx="50%" cy="50%" innerRadius={45} outerRadius={72} paddingAngle={3} dataKey="value">
+                  {pieData.map((entry, i) => <Cell key={i} fill={entry.color} />)}
+                </Pie>
+                <Tooltip contentStyle={{ background: '#161929', border: '1px solid #252a4a', borderRadius: '8px', fontSize: '0.75rem' }} />
+              </PieChart>
+            </ResponsiveContainer>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem', marginTop: '0.5rem' }}>
+              {pieData.map(e => (
+                <div key={e.name} style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+                  <div style={{ width: 6, height: 6, borderRadius: '50%', background: e.color, flexShrink: 0 }} />
+                  <span style={{ fontFamily: 'Nunito', fontSize: '0.65rem', color: '#5a6190', textTransform: 'capitalize' }}>{e.name}</span>
                 </div>
-              </div>
-            )}
+              ))}
+            </div>
           </div>
-        ) : (
-          <div className="card text-center py-12">
-            <p className="text-muted font-body text-sm">Start logging daily to see your mood report</p>
-          </div>
-        )}
-      </div>
+          {report.dominantMood && (
+            <div className="card" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
+              <p style={{ fontFamily: 'Outfit', fontSize: '0.75rem', color: '#5a6190', letterSpacing: '0.05em', marginBottom: '0.75rem' }}>DOMINANT MOOD</p>
+              <span style={{ fontSize: '3rem', marginBottom: '0.5rem' }}>{MOODS.find(m => m.type === report.dominantMood)?.emoji}</span>
+              <p style={{ fontFamily: 'Outfit', fontSize: '1rem', fontWeight: 700, textTransform: 'capitalize', color: COLORS[report.dominantMood] }}>{report.dominantMood}</p>
+              <p style={{ fontFamily: 'Nunito', fontSize: '0.7rem', color: '#5a6190', marginTop: '0.3rem' }}>Most this week</p>
+            </div>
+          )}
+        </div>
+      ) : (
+        <div className="card" style={{ textAlign: 'center', padding: '2rem' }}>
+          <p style={{ fontFamily: 'Nunito', fontSize: '0.85rem', color: '#5a6190' }}>Start logging daily to see your mood report</p>
+        </div>
+      )}
     </div>
   )
 }

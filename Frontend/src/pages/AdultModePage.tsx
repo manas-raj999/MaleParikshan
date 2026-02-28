@@ -1,145 +1,102 @@
 import { useState } from 'react'
 import { adultService } from '../services/adultService'
 import { useAuth } from '../context/AuthContext'
-import { useTranslation } from '../hooks/useTranslation'
 
 export default function AdultModePage() {
   const { user, updateUser } = useAuth()
-  const { t } = useTranslation()
   const [showModal, setShowModal] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
-  // Age gate
-  if (!user || user.age < 18) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh] text-center animate-fade-up">
-        <div className="text-5xl mb-6">🔒</div>
-        <h1 className="font-display text-2xl font-bold text-white mb-3">{t('adult.title')}</h1>
-        <p className="text-muted font-body text-sm max-w-sm">{t('adult.ageRestricted')}</p>
-      </div>
-    )
-  }
+  if (!user || user.age < 18) return (
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '60vh', textAlign: 'center', padding: '2rem' }}>
+      <span style={{ fontSize: '3rem', marginBottom: '1rem' }}>🔒</span>
+      <h2 style={{ fontFamily: 'Outfit', fontSize: '1.4rem', fontWeight: 700, marginBottom: '0.5rem' }}>Age Restricted</h2>
+      <p style={{ fontFamily: 'Nunito', fontSize: '0.85rem', color: '#5a6190' }}>You must be 18 or older to access this section.</p>
+    </div>
+  )
 
   const handleEnable = async () => {
-    setLoading(true)
-    setError('')
+    setLoading(true); setError('')
     try {
       await adultService.enable()
       updateUser({ adultModeEnabled: true })
       setShowModal(false)
-    } catch {
-      setError('Failed to enable adult mode. Please try again.')
-    } finally {
-      setLoading(false)
-    }
+    } catch { setError('Failed. Try again.') }
+    finally { setLoading(false) }
   }
 
   return (
-    <div className="space-y-8 animate-fade-up">
-      <div>
-        <h1 className="font-display text-3xl font-bold text-white mb-2">{t('adult.title')}</h1>
-        <p className="text-muted font-body text-sm">Advanced health content for verified adults</p>
+    <div className="page-content animate-fade-up">
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <span style={{ fontSize: '1.3rem' }}>🔒</span>
+          <span style={{ fontFamily: 'Outfit', fontSize: '1.3rem', fontWeight: 700 }}>Adult Mode</span>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <span>🌿</span>
+          <span style={{ fontFamily: 'Outfit', fontSize: '0.95rem', fontWeight: 600, color: '#8ecfcc' }}>Male Parikshan</span>
+        </div>
       </div>
 
       {user.adultModeEnabled ? (
-        <div className="space-y-6">
-          {/* Enabled state */}
-          <div className="card border-gold/20 bg-gold/5">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-gold/20 border border-gold/30 flex items-center justify-center">
-                <span className="text-gold text-xl">✓</span>
-              </div>
-              <div>
-                <p className="font-display font-semibold text-white">{t('adult.enabled')}</p>
-                <p className="text-muted text-sm font-body">You have access to all adult health content</p>
-              </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+          <div style={{ background: '#ff7b2e11', border: '1px solid #ff7b2e33', borderRadius: '1rem', padding: '1rem 1.25rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <div style={{ width: 40, height: 40, borderRadius: '0.75rem', background: '#ff7b2e22', border: '1px solid #ff7b2e44', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem' }}>✓</div>
+            <div>
+              <p style={{ fontFamily: 'Outfit', fontSize: '0.9rem', fontWeight: 700, color: '#ff7b2e' }}>Adult Mode Enabled</p>
+              <p style={{ fontFamily: 'Nunito', fontSize: '0.75rem', color: '#5a6190' }}>You have access to all adult health content</p>
             </div>
           </div>
-
-          {/* Content sections */}
           {[
-            {
-              icon: '🧬',
-              title: 'Sexual Health Education',
-              desc: 'Comprehensive guides on sexual wellness, STI prevention, and healthy intimacy.',
-            },
-            {
-              icon: '💪',
-              title: 'Advanced Fitness & Nutrition',
-              desc: 'Detailed protocols for muscle building, hormone optimization, and performance.',
-            },
-            {
-              icon: '🧠',
-              title: 'Mental & Emotional Mastery',
-              desc: 'Deep dives into emotional regulation, trauma healing, and relationship dynamics.',
-            },
-            {
-              icon: '⚡',
-              title: 'Energy & Hormonal Health',
-              desc: 'Understanding testosterone, sleep, and lifestyle for peak performance.',
-            },
-          ].map((item) => (
-            <div key={item.title} className="card hover:border-accent/20 transition-colors duration-200">
-              <div className="flex gap-4">
-                <span className="text-3xl">{item.icon}</span>
+            { icon: '🧬', title: 'Sexual Health Education', desc: 'Comprehensive guides on sexual wellness, STI prevention, and healthy intimacy.' },
+            { icon: '💪', title: 'Advanced Fitness & Hormones', desc: 'Testosterone optimization, muscle building protocols, and performance guides.' },
+            { icon: '🧠', title: 'Mental & Emotional Mastery', desc: 'Emotional regulation, trauma healing, and relationship dynamics.' },
+            { icon: '⚡', title: 'Energy & Hormonal Health', desc: 'Understanding hormones, sleep cycles, and lifestyle for peak performance.' },
+          ].map(item => (
+            <div key={item.title} className="card" style={{ cursor: 'pointer', transition: 'border-color 0.2s' }}
+              onMouseEnter={e => (e.currentTarget.style.borderColor = '#4d7cff44')}
+              onMouseLeave={e => (e.currentTarget.style.borderColor = '#252a4a')}
+            >
+              <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
+                <span style={{ fontSize: '1.5rem' }}>{item.icon}</span>
                 <div>
-                  <h3 className="font-display font-semibold text-white mb-1">{item.title}</h3>
-                  <p className="text-muted text-sm font-body leading-relaxed">{item.desc}</p>
-                  <button className="text-accent text-sm font-display font-medium mt-3 hover:text-accent-dim transition-colors">
-                    Explore →
-                  </button>
+                  <p style={{ fontFamily: 'Outfit', fontSize: '0.9rem', fontWeight: 700, marginBottom: '0.3rem' }}>{item.title}</p>
+                  <p style={{ fontFamily: 'Nunito', fontSize: '0.8rem', color: '#5a6190', lineHeight: 1.5 }}>{item.desc}</p>
+                  <p style={{ fontFamily: 'Outfit', fontSize: '0.8rem', color: '#4d7cff', marginTop: '0.5rem', fontWeight: 600 }}>Explore →</p>
                 </div>
               </div>
             </div>
           ))}
         </div>
       ) : (
-        <div className="card max-w-lg">
-          <div className="text-center py-6">
-            <div className="w-16 h-16 rounded-2xl bg-gold/10 border border-gold/20 flex items-center justify-center text-3xl mx-auto mb-6">
-              🔞
-            </div>
-            <h2 className="font-display text-xl font-bold text-white mb-3">{t('adult.title')}</h2>
-            <p className="text-muted font-body text-sm leading-relaxed mb-8">
-              {t('adult.description')}
-            </p>
-            <button onClick={() => setShowModal(true)} className="btn-primary px-8 py-4">
-              {t('adult.enable')}
-            </button>
-          </div>
+        <div className="card" style={{ maxWidth: 400, margin: '0 auto', textAlign: 'center', padding: '2rem' }}>
+          <div style={{ width: 64, height: 64, borderRadius: '1rem', background: '#ff7b2e22', border: '1px solid #ff7b2e44', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2rem', margin: '0 auto 1.5rem' }}>🔞</div>
+          <h2 style={{ fontFamily: 'Outfit', fontSize: '1.2rem', fontWeight: 800, marginBottom: '0.75rem' }}>Adult Mode</h2>
+          <p style={{ fontFamily: 'Nunito', fontSize: '0.85rem', color: '#5a6190', lineHeight: 1.6, marginBottom: '1.5rem' }}>
+            Access advanced health content designed for adults 18+. Enable adult mode to unlock exclusive content.
+          </p>
+          <button onClick={() => setShowModal(true)} className="btn-orange" style={{ width: '100%', padding: '0.85rem' }}>
+            Enable Adult Mode
+          </button>
         </div>
       )}
 
-      {/* Disclaimer Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-obsidian/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-elevated border border-border rounded-2xl p-8 max-w-md w-full animate-fade-up">
-            <div className="text-center mb-6">
-              <span className="text-4xl block mb-4">⚠️</span>
-              <h3 className="font-display text-xl font-bold text-white mb-2">Age Verification</h3>
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(13,15,26,0.85)', backdropFilter: 'blur(8px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100, padding: '1.5rem' }}>
+          <div style={{ background: 'linear-gradient(145deg,#1c2038,#161929)', border: '1px solid #252a4a', borderRadius: '1.25rem', padding: '2rem', maxWidth: 400, width: '100%', animation: 'fadeUp 0.3s ease forwards' }}>
+            <div style={{ textAlign: 'center', marginBottom: '1.25rem' }}>
+              <span style={{ fontSize: '2.5rem', display: 'block', marginBottom: '0.75rem' }}>⚠️</span>
+              <h3 style={{ fontFamily: 'Outfit', fontSize: '1.2rem', fontWeight: 800 }}>Age Verification</h3>
             </div>
-            <p className="text-white/70 font-body text-sm leading-relaxed mb-6">
-              {t('adult.disclaimer')}
+            <p style={{ fontFamily: 'Nunito', fontSize: '0.85rem', color: '#c8d0ff', lineHeight: 1.6, marginBottom: '1.5rem' }}>
+              This section contains mature health content. By enabling adult mode, you confirm you are 18 or older and consent to view this content.
             </p>
-            {error && (
-              <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-3 mb-4">
-                <p className="text-red-400 text-sm font-body">{error}</p>
-              </div>
-            )}
-            <div className="flex gap-3">
-              <button
-                onClick={() => setShowModal(false)}
-                className="btn-secondary flex-1 py-3"
-              >
-                {t('adult.cancel')}
-              </button>
-              <button
-                onClick={handleEnable}
-                disabled={loading}
-                className="btn-primary flex-1 py-3 disabled:opacity-50"
-              >
-                {loading ? 'Enabling...' : t('adult.accept')}
+            {error && <p style={{ color: '#ff4d6a', fontSize: '0.8rem', fontFamily: 'Nunito', marginBottom: '0.75rem' }}>{error}</p>}
+            <div style={{ display: 'flex', gap: '0.75rem' }}>
+              <button onClick={() => setShowModal(false)} className="btn-secondary" style={{ flex: 1 }}>Cancel</button>
+              <button onClick={handleEnable} disabled={loading} className="btn-orange" style={{ flex: 1 }}>
+                {loading ? 'Enabling...' : 'I Accept & Enable'}
               </button>
             </div>
           </div>
