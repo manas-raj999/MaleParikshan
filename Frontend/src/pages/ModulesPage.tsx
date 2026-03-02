@@ -50,9 +50,27 @@ export default function ModulesPage() {
   return (
     <div className="space-y-8 animate-fade-up">
       <div>
-        <h1 className="font-display text-3xl font-bold text-white mb-2">{t('modules.title')}</h1>
-        <p className="text-muted font-body text-sm">Expand your knowledge. Improve your life.</p>
+        <h1 className="font-display text-3xl font-bold text-white mb-2">{t('modules.learnToday')}</h1>
+        <p className="text-muted font-body text-sm">{t('modules.title')}</p>
       </div>
+      {/* top categories row */}
+      {modules.length > 0 && (
+        <>
+          <div className="grid grid-cols-3 gap-4">
+            {Array.from(new Set(modules.map((m) => m.category))).slice(0, 3).map((cat) => (
+              <div key={cat} className="card flex flex-col items-center justify-center p-6 text-center cursor-pointer">
+                {/* icon placeholder based on category initial */}
+                <div className="text-4xl mb-2">{cat.charAt(0)}</div>
+                <p className="font-display text-sm text-white">{cat}</p>
+              </div>
+            ))}
+          </div>
+          {/* knowledge hub link */}
+          <div className="text-center mt-4">
+            <a href="#" className="text-accent font-medium">+ {t('modules.knowledgeHub')}</a>
+          </div>
+        </>
+      )}
 
       {/* Progress */}
       {modules.length > 0 && (

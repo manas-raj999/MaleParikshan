@@ -40,7 +40,13 @@
     "currentStreak": "Current Streak",
     "todayMood": "Today's Mood",
     "days": "days",
-    "notLogged": "Not logged"
+    "notLogged": "Not logged",
+    "didYouKnow": "Did you know?",
+    "dailyTracker": "Daily Tracker",
+    "dailyChallenge": "Daily Challenge",
+    "drinkWater": "Drink water",
+    "logMood": "Log mood",
+    "loginStreak": "Login Streak"
   },
   "streak": {
     "title": "Streak Tracker",
@@ -64,6 +70,8 @@
   },
   "modules": {
     "title": "Learning Modules",
+    "learnToday": "Learn Today",
+    "knowledgeHub": "Knowledge Hub",
     "completed": "Completed",
     "markComplete": "Mark as Complete",
     "duration": "Duration"

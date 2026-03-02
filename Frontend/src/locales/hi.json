@@ -40,7 +40,13 @@
     "currentStreak": "वर्तमान स्ट्रीक",
     "todayMood": "आज का मूड",
     "days": "दिन",
-    "notLogged": "दर्ज नहीं"
+    "notLogged": "दर्ज नहीं",
+    "didYouKnow": "क्या आप जानते हैं?",
+    "dailyTracker": "दैनिक ट्रैकर",
+    "dailyChallenge": "दैनिक चुनौती",
+    "drinkWater": "पानी पिएं",
+    "logMood": "मूड दर्ज करें",
+    "loginStreak": "लॉगिन स्ट्रीक"
   },
   "streak": {
     "title": "स्ट्रीक ट्रैकर",
@@ -64,6 +70,8 @@
   },
   "modules": {
     "title": "सीखने के मॉड्यूल",
+    "learnToday": "आज सीखें",
+    "knowledgeHub": "ज्ञान केंद्र",
     "completed": "पूर्ण",
     "markComplete": "पूर्ण के रूप में चिह्नित करें",
     "duration": "अवधि"

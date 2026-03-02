@@ -1,6 +1,7 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { useTranslation } from '../hooks/useTranslation'
+import BottomNav from '../components/BottomNav'
 
 const navItems = [
   { key: 'dashboard', path: '/dashboard', icon: '⬡' },
@@ -23,8 +24,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="flex min-h-screen bg-obsidian">
-      {/* Sidebar */}
-      <aside className="w-64 bg-surface border-r border-border flex flex-col fixed h-screen z-10">
+      {/* Sidebar - hidden on small screens */}
+      <aside className="hidden md:flex w-64 bg-surface border-r border-border flex-col fixed h-screen z-10">
         {/* Logo */}
         <div className="p-6 border-b border-border">
           <Link to="/dashboard">
@@ -99,11 +100,13 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       </aside>
 
       {/* Main content */}
-      <main className="flex-1 ml-64 overflow-y-auto min-h-screen">
+      <main className="flex-1 md:ml-64 overflow-y-auto min-h-screen pb-16">
         <div className="max-w-5xl mx-auto p-8">
           {children}
         </div>
       </main>
+      {/* bottom navigation for mobile */}
+      <BottomNav />
     </div>
   )
 }
