@@ -1,9 +1,11 @@
 export interface User {
   id: string
   email?: string
-  age: number
+  age?: number
   language: 'English' | 'Hindi'
   adultModeEnabled: boolean
+  isGuest?: boolean
+  createdAt?: string
 }
 
 export interface Profile {
@@ -16,17 +18,21 @@ export interface Profile {
   activityLevel: 'Low' | 'Moderate' | 'High'
   goals: string[]
   riskScore: number
-  onboardingComplete: boolean
 }
 
 export interface Streak {
+  id: string
+  userId: string
   currentStreak: number
   longestStreak: number
   targetDays: number
-  lastCheckinDate?: string
+  lastCheckDate?: string   // ← fixed: was lastCheckinDate
+  createdAt: string
+  updatedAt: string
 }
 
-export type MoodType = 'happy' | 'calm' | 'anxious' | 'sad' | 'angry' | 'focused' | 'tired'
+// ✅ Fixed: matches backend exactly
+export type MoodType = 'calm' | 'angry' | 'low' | 'confident' | 'neutral'
 
 export interface MoodEntry {
   id: string
@@ -47,7 +53,9 @@ export interface Module {
   content?: string
   completed: boolean
   category: string
-  duration: string
+  isAdultOnly: boolean
+  order: number
+  progress?: { completed: boolean; completedAt?: string }[]
 }
 
 export interface ChatMessage {
@@ -59,10 +67,27 @@ export interface ChatMessage {
 
 export interface DashboardData {
   healthScore: number
-  currentStreak: number
+  streak: {
+    current: number
+    longest: number
+    target: number
+  } | null
   todayMood?: MoodType
-  profile?: Partial<Profile>
-  user?: User
+  modulesCompleted: number
+  user: {
+    id: string
+    email?: string
+    age?: number
+    language: string
+    adultModeEnabled: boolean
+    isGuest: boolean
+    profile?: {
+      bmi: number
+      riskScore: number
+      activityLevel: string
+      goals: string[]
+    } | null
+  }
 }
 
 export interface AuthResponse {

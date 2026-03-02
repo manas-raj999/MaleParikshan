@@ -2,7 +2,6 @@ import api from './api'
 import type { Profile } from '../types'
 
 export interface ProfileSetupPayload {
-  age: number
   height: number
   weight: number
   sleepHours: number
@@ -19,12 +18,12 @@ export interface ProfileSetupResponse {
 
 export const profileService = {
   getMe: async () => {
-    const res = await api.get<Profile>('/profile/me')
-    return res.data
+    const res = await api.get('/profile/me')
+    return res.data.data  // ← changed
   },
 
   setup: async (data: ProfileSetupPayload) => {
-    const res = await api.post<ProfileSetupResponse>('/profile/setup', data)
-    return res.data
+    const res = await api.post('/profile/setup', data)
+    return res.data.data  // ← changed
   },
 }

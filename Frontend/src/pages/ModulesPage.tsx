@@ -32,7 +32,11 @@ export default function ModulesPage() {
     }
   }
 
-  const completedCount = modules.filter((m) => m.completed).length
+  // ✅ Check completed via progress array (matches backend response)
+  const isCompleted = (module: Module) =>
+    module.progress?.[0]?.completed === true
+
+  const completedCount = modules.filter(isCompleted).length
   const progress = modules.length > 0 ? (completedCount / modules.length) * 100 : 0
 
   if (loading) {
@@ -77,90 +81,95 @@ export default function ModulesPage() {
         <div className="card text-center py-16">
           <p className="text-4xl mb-4">📚</p>
           <p className="font-display text-lg font-semibold text-white mb-2">No modules yet</p>
-          <p className="text-muted text-sm font-body">Check back soon for new learning content.</p>
+          <p className="text-muted text-sm font-body">
+            Run <code className="text-accent">npm run seed</code> in your backend to load modules.
+          </p>
         </div>
       )}
 
       {/* Module list */}
       <div className="space-y-3">
-        {modules.map((module, index) => (
-          <div
-            key={module.id}
-            className={`card transition-all duration-200 ${
-              module.completed ? 'border-teal/20' : 'hover:border-accent/20'
-            }`}
-            style={{ animationDelay: `${index * 0.05}s` }}
-          >
+        {modules.map((module, index) => {
+          const completed = isCompleted(module)
+          return (
             <div
-              className="flex items-center justify-between cursor-pointer"
-              onClick={() => setExpandedId(expandedId === module.id ? null : module.id)}
+              key={module.id}
+              className={`card transition-all duration-200 ${
+                completed ? 'border-teal/20' : 'hover:border-accent/20'
+              }`}
+              style={{ animationDelay: `${index * 0.05}s` }}
             >
-              <div className="flex items-center gap-4">
-                {/* Completion indicator */}
-                <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${
-                  module.completed
-                    ? 'bg-teal/10 border border-teal/30'
-                    : 'bg-surface border border-border'
-                }`}>
-                  {module.completed ? (
-                    <span className="text-teal text-sm">✓</span>
-                  ) : (
-                    <span className="font-mono text-muted text-xs font-bold">
-                      {String(index + 1).padStart(2, '0')}
-                    </span>
-                  )}
-                </div>
-
-                <div>
-                  <div className="flex items-center gap-2 mb-0.5">
-                    <h3 className="font-display font-semibold text-white text-sm">{module.title}</h3>
-                    {module.completed && (
-                      <span className="badge bg-teal/10 text-teal border border-teal/20">
-                        {t('modules.completed')}
+              <div
+                className="flex items-center justify-between cursor-pointer"
+                onClick={() => setExpandedId(expandedId === module.id ? null : module.id)}
+              >
+                <div className="flex items-center gap-4">
+                  {/* Completion indicator */}
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${
+                    completed
+                      ? 'bg-teal/10 border border-teal/30'
+                      : 'bg-surface border border-border'
+                  }`}>
+                    {completed ? (
+                      <span className="text-teal text-sm">✓</span>
+                    ) : (
+                      <span className="font-mono text-muted text-xs font-bold">
+                        {String(index + 1).padStart(2, '0')}
                       </span>
                     )}
                   </div>
-                  <div className="flex items-center gap-3">
-                    <span className="text-muted text-xs font-body">{module.category}</span>
-                    <span className="text-muted text-xs font-body">·</span>
-                    <span className="text-muted text-xs font-body">
-                      {t('modules.duration')}: {module.duration}
-                    </span>
+
+                  <div>
+                    <div className="flex items-center gap-2 mb-0.5">
+                      <h3 className="font-display font-semibold text-white text-sm">
+                        {module.title}
+                      </h3>
+                      {completed && (
+                        <span className="badge bg-teal/10 text-teal border border-teal/20">
+                          {t('modules.completed')}
+                        </span>
+                      )}
+                      {/* ✅ Show 18+ badge for adult modules */}
+                      {module.isAdultOnly && (
+                        <span className="text-xs text-red-400 border border-red-400/20 px-2 py-0.5 rounded-full">
+                          18+
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <span className="text-muted text-xs font-body">{module.category}</span>
+                      {/* ✅ Removed module.duration — doesn't exist in backend */}
+                    </div>
                   </div>
                 </div>
+
+                <span className={`text-muted transition-transform duration-200 ${
+                  expandedId === module.id ? 'rotate-180' : ''
+                }`}>
+                  ↓
+                </span>
               </div>
 
-              <span className={`text-muted transition-transform duration-200 ${
-                expandedId === module.id ? 'rotate-180' : ''
-              }`}>
-                ↓
-              </span>
+              {/* Expanded content */}
+              {expandedId === module.id && (
+                <div className="mt-4 pt-4 border-t border-border animate-fade-in">
+                  <p className="text-white/70 font-body text-sm leading-relaxed mb-4">
+                    {module.description}
+                  </p>
+                  {!completed && (
+                    <button
+                      onClick={() => handleComplete(module.id)}
+                      disabled={completing === module.id}
+                      className="btn-secondary text-sm py-2.5 px-5 disabled:opacity-50"
+                    >
+                      {completing === module.id ? 'Saving...' : `✓ ${t('modules.markComplete')}`}
+                    </button>
+                  )}
+                </div>
+              )}
             </div>
-
-            {/* Expanded content */}
-            {expandedId === module.id && (
-              <div className="mt-4 pt-4 border-t border-border animate-fade-in">
-                <p className="text-white/70 font-body text-sm leading-relaxed mb-4">
-                  {module.description}
-                </p>
-                {module.content && (
-                  <div className="bg-surface rounded-xl p-4 mb-4 border border-border">
-                    <p className="text-white/60 font-body text-sm leading-relaxed">{module.content}</p>
-                  </div>
-                )}
-                {!module.completed && (
-                  <button
-                    onClick={() => handleComplete(module.id)}
-                    disabled={completing === module.id}
-                    className="btn-secondary text-sm py-2.5 px-5 disabled:opacity-50"
-                  >
-                    {completing === module.id ? 'Saving...' : `✓ ${t('modules.markComplete')}`}
-                  </button>
-                )}
-              </div>
-            )}
-          </div>
-        ))}
+          )
+        })}
       </div>
     </div>
   )

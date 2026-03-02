@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { profileService, type ProfileSetupResponse } from '../services/profileService'
+import { profileService } from '../services/profileService'
 
 const GOALS = [
   'Improve fitness',
@@ -17,7 +17,6 @@ export default function OnboardingPage() {
   const navigate = useNavigate()
   const [step, setStep] = useState(1)
   const [form, setForm] = useState({
-    age: '',
     height: '',
     weight: '',
     sleepHours: '',
@@ -26,31 +25,39 @@ export default function OnboardingPage() {
   })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-  const [result, setResult] = useState<ProfileSetupResponse | null>(null)
+  const [result, setResult] = useState<{
+    bmi: number
+    riskScore: number
+    activityLevel: string
+    goals: string[]
+  } | null>(null)
 
   const toggleGoal = (goal: string) => {
     setForm((f) => ({
       ...f,
-      goals: f.goals.includes(goal) ? f.goals.filter((g) => g !== goal) : [...f.goals, goal],
+      goals: f.goals.includes(goal)
+        ? f.goals.filter((g) => g !== goal)
+        : [...f.goals, goal],
     }))
   }
 
   const handleSubmit = async () => {
     setError('')
-    if (!form.age || !form.height || !form.weight || !form.sleepHours || form.goals.length === 0) {
+    if (!form.height || !form.weight || !form.sleepHours || form.goals.length === 0) {
       setError('Please fill in all fields and select at least one goal.')
       return
     }
     setLoading(true)
     try {
+      // ✅ Fixed: removed age (backend doesn't accept it in /profile/setup)
       const res = await profileService.setup({
-        age: Number(form.age),
         height: Number(form.height),
         weight: Number(form.weight),
         sleepHours: Number(form.sleepHours),
         activityLevel: form.activityLevel,
         goals: form.goals,
       })
+      // ✅ Fixed: backend returns the profile object directly
       setResult(res)
       setStep(3)
     } catch (err: unknown) {
@@ -77,6 +84,7 @@ export default function OnboardingPage() {
   return (
     <div className="min-h-screen bg-obsidian flex items-center justify-center p-8">
       <div className="w-full max-w-xl">
+
         {/* Header */}
         <div className="text-center mb-10 animate-fade-up">
           <div className="font-display text-xl font-bold text-gradient mb-4">Male Parikshan</div>
@@ -84,7 +92,9 @@ export default function OnboardingPage() {
             {step === 3 ? 'Your Health Profile' : 'Complete Your Profile'}
           </h2>
           <p className="text-muted font-body text-sm">
-            {step === 3 ? 'Here are your personalized health insights' : 'Help us personalize your wellness journey'}
+            {step === 3
+              ? 'Here are your personalized health insights'
+              : 'Help us personalize your wellness journey'}
           </p>
         </div>
 
@@ -94,9 +104,17 @@ export default function OnboardingPage() {
             {[1, 2].map((s) => (
               <div key={s} className="flex items-center gap-2">
                 <div className={`w-8 h-8 rounded-full flex items-center justify-center font-mono text-sm font-bold transition-all duration-300 ${
-                  s <= step ? 'bg-accent text-white' : 'bg-elevated text-muted border border-border'
-                }`}>{s}</div>
-                {s < 2 && <div className={`w-16 h-px transition-all duration-300 ${s < step ? 'bg-accent' : 'bg-border'}`} />}
+                  s <= step
+                    ? 'bg-accent text-white'
+                    : 'bg-elevated text-muted border border-border'
+                }`}>
+                  {s}
+                </div>
+                {s < 2 && (
+                  <div className={`w-16 h-px transition-all duration-300 ${
+                    s < step ? 'bg-accent' : 'bg-border'
+                  }`} />
+                )}
               </div>
             ))}
           </div>
@@ -108,16 +126,7 @@ export default function OnboardingPage() {
             <h3 className="font-display text-lg font-semibold text-white mb-4">Body Metrics</h3>
 
             <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="label">Age</label>
-                <input
-                  type="number"
-                  value={form.age}
-                  onChange={(e) => setForm({ ...form, age: e.target.value })}
-                  placeholder="25"
-                  className="input-field"
-                />
-              </div>
+              {/* ✅ Removed age field — age is set during registration */}
               <div>
                 <label className="label">Height (cm)</label>
                 <input
@@ -138,7 +147,7 @@ export default function OnboardingPage() {
                   className="input-field"
                 />
               </div>
-              <div>
+              <div className="col-span-2">
                 <label className="label">Sleep Hours</label>
                 <input
                   type="number"
@@ -174,7 +183,7 @@ export default function OnboardingPage() {
 
             <button
               onClick={() => setStep(2)}
-              disabled={!form.age || !form.height || !form.weight || !form.sleepHours}
+              disabled={!form.height || !form.weight || !form.sleepHours}
               className="btn-primary w-full py-4 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Continue →
@@ -233,6 +242,7 @@ export default function OnboardingPage() {
             <div className="grid grid-cols-2 gap-4">
               <div className="card text-center">
                 <p className="text-muted font-body text-xs uppercase tracking-widest mb-2">BMI</p>
+                {/* ✅ Fixed: result.bmi is directly on result object */}
                 <p className="font-display text-4xl font-bold text-white mb-1">
                   {result.bmi?.toFixed(1)}
                 </p>
@@ -242,6 +252,7 @@ export default function OnboardingPage() {
               </div>
               <div className="card text-center">
                 <p className="text-muted font-body text-xs uppercase tracking-widest mb-2">Risk Score</p>
+                {/* ✅ Fixed: result.riskScore is directly on result object */}
                 <p className="font-display text-4xl font-bold text-white mb-1">
                   {result.riskScore}
                 </p>
@@ -251,19 +262,65 @@ export default function OnboardingPage() {
               </div>
             </div>
 
-            {result.suggestions && result.suggestions.length > 0 && (
-              <div className="card">
-                <h4 className="font-display font-semibold text-white mb-4">Recommendations</h4>
-                <div className="space-y-3">
-                  {result.suggestions.map((s, i) => (
-                    <div key={i} className="flex gap-3">
-                      <span className="text-accent text-sm mt-0.5">→</span>
-                      <p className="text-white/70 text-sm font-body leading-relaxed">{s}</p>
-                    </div>
-                  ))}
+            {/* Goals summary */}
+            <div className="card">
+              <h4 className="font-display font-semibold text-white mb-4">Your Goals</h4>
+              <div className="flex flex-wrap gap-2">
+                {result.goals.map((goal, i) => (
+                  <span
+                    key={i}
+                    className="px-3 py-1 rounded-full bg-accent/10 border border-accent/20 text-accent text-sm font-body"
+                  >
+                    {goal}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {/* Health tips based on BMI */}
+            <div className="card">
+              <h4 className="font-display font-semibold text-white mb-4">Recommendations</h4>
+              <div className="space-y-3">
+                {result.bmi < 18.5 && (
+                  <div className="flex gap-3">
+                    <span className="text-accent text-sm mt-0.5">→</span>
+                    <p className="text-white/70 text-sm font-body leading-relaxed">
+                      Focus on nutrient-dense foods to reach a healthy weight.
+                    </p>
+                  </div>
+                )}
+                {result.bmi >= 18.5 && result.bmi < 25 && (
+                  <div className="flex gap-3">
+                    <span className="text-accent text-sm mt-0.5">→</span>
+                    <p className="text-white/70 text-sm font-body leading-relaxed">
+                      Great BMI! Maintain it with balanced diet and regular exercise.
+                    </p>
+                  </div>
+                )}
+                {result.bmi >= 25 && (
+                  <div className="flex gap-3">
+                    <span className="text-accent text-sm mt-0.5">→</span>
+                    <p className="text-white/70 text-sm font-body leading-relaxed">
+                      Consider increasing physical activity and reducing processed foods.
+                    </p>
+                  </div>
+                )}
+                {result.riskScore > 50 && (
+                  <div className="flex gap-3">
+                    <span className="text-accent text-sm mt-0.5">→</span>
+                    <p className="text-white/70 text-sm font-body leading-relaxed">
+                      Your risk score is elevated. Focus on sleep, exercise and stress management.
+                    </p>
+                  </div>
+                )}
+                <div className="flex gap-3">
+                  <span className="text-accent text-sm mt-0.5">→</span>
+                  <p className="text-white/70 text-sm font-body leading-relaxed">
+                    Use the streak tracker and mood logger daily to build healthy habits.
+                  </p>
                 </div>
               </div>
-            )}
+            </div>
 
             <button
               onClick={() => navigate('/dashboard')}

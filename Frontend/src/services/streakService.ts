@@ -3,17 +3,17 @@ import type { Streak } from '../types'
 
 export const streakService = {
   setup: async (targetDays: number) => {
-    const res = await api.post<Streak>('/streak/setup', { targetDays })
-    return res.data
+    const res = await api.post('/streak/setup', { targetDays })
+    return res.data.data  // ← changed
   },
 
-  checkin: async (status: 'stayed_consistent' | 'resisted_urges' | 'relapsed') => {
-    const res = await api.post<Streak>('/streak/checkin', { status })
-    return res.data
+  checkin: async (option: 'stayed_consistent' | 'resisted_urges' | 'relapsed') => {
+    const res = await api.post('/streak/checkin', { option })  // ← status → option
+    return res.data.data  // ← changed
   },
 
   get: async () => {
-    const res = await api.get<Streak>('/streak')
-    return res.data
+    const res = await api.get('/streak')
+    return res.data.data  // ← changed
   },
 }
