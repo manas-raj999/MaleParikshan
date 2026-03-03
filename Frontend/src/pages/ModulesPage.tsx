@@ -341,15 +341,6 @@ export default function ModulesPage() {
                 </span>
               </div>
 
-              {/* Module Image */}
-              {mod.imageUrl && (
-                <img
-                  src={mod.imageUrl}
-                  alt={mod.title}
-                  className="w-full h-48 object-cover rounded-xl mb-5 border border-white/10"
-                />
-              )}
-
               <h2 className="font-display text-xl font-bold text-white leading-snug mb-5">{mod.title}</h2>
 
               <p className="font-body text-white/60 text-sm leading-relaxed flex-1 whitespace-pre-line">{mod.description}</p>
@@ -436,15 +427,6 @@ export default function ModulesPage() {
                     <h2 className="font-display text-xl font-bold text-white leading-snug">{mod.title}</h2>
                   </div>
                 </div>
-
-                {/* Module Image */}
-                {mod.imageUrl && (
-                  <img
-                    src={mod.imageUrl}
-                    alt={mod.title}
-                    className="w-full h-40 object-cover rounded-xl mb-5 border border-white/10"
-                  />
-                )}
 
                 {/* Answer section */}
                 <div className="flex-1 rounded-xl p-5 mb-5" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>

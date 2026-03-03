@@ -63,6 +63,7 @@ model HealthProfile {
   goals         String[]
   bmi           Float?
   riskScore     Float?
+  onboardingComplete Boolean   @default(false)
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
 
