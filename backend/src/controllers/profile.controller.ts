@@ -23,8 +23,8 @@ export const setupProfile = async (req: AuthRequest, res: Response, next: NextFu
 
     const profile = await prisma.healthProfile.upsert({
       where: { userId },
-      create: { userId, ...data, bmi, riskScore, onboardingComplete: true },
-      update: { ...data, bmi, riskScore, onboardingComplete: true },
+      create: { userId, ...data, bmi, riskScore },
+      update: { ...data, bmi, riskScore },
     });
 
     sendSuccess(res, profile, 'Profile saved successfully');

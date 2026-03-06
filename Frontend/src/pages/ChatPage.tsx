@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useMode } from "../context/ModeContext";
+import { chatService } from "../services/chatService";
 
 interface Message {
   id: string;
@@ -117,6 +118,7 @@ const ChatPage = () => {
     setLoading(true);
     setSelectedFile(null);
 
+    // Add user message to chat
     setMessages((prev) => [
       ...prev,
       {
@@ -125,90 +127,44 @@ const ChatPage = () => {
         content: messageText,
         timestamp: new Date(),
       },
-      {
-        id: `ai-${Date.now()}`,
-        role: "ai",
-        content: "",
-        timestamp: new Date(),
-      },
     ]);
 
     try {
-      const response = await fetch("http://localhost:5000/chat", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-          "Content-Type": "application/json",
+      // Use chat service to send message
+      const response = await chatService.send(
+        messageText,
+        isAdultMode ? "adult" : "normal"
+      );
+
+      // Add AI response to chat
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: `ai-${Date.now()}`,
+          role: "ai",
+          content: response.response,
+          timestamp: new Date(response.timestamp),
         },
-        body: JSON.stringify({ message: messageText }),
-      });
+      ]);
+    } catch (err: any) {
+      console.error("Chat error:", err);
+      const errorMsg =
+        err.response?.data?.message ||
+        err.message ||
+        "Sorry, I encountered an error. Please try again.";
 
-      if (!response.body) throw new Error("No response body");
-
-      const reader = response.body.getReader();
-      const decoder = new TextDecoder("utf-8");
-
-      let aiText = "";
-      let buffer = "";
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-
-        const chunk = decoder.decode(value, { stream: true });
-        buffer += chunk;
-
-        const lines = buffer.split("\n");
-        buffer = lines.pop() || "";
-
-        for (const line of lines) {
-          if (line.startsWith("data:")) {
-            const data = line.replace("data:", "").trim();
-            if (data === "[DONE]") continue;
-            if (data) {
-              aiText += data;
-              setMessages((prev) => {
-                const updated = [...prev];
-                updated[updated.length - 1] = {
-                  ...updated[updated.length - 1],
-                  content: aiText,
-                };
-                return updated;
-              });
-            }
-          }
-        }
-      }
-
-      if (buffer && buffer.startsWith("data:")) {
-        const data = buffer.replace("data:", "").trim();
-        if (data !== "[DONE]" && data) {
-          aiText += data;
-          setMessages((prev) => {
-            const updated = [...prev];
-            updated[updated.length - 1] = {
-              ...updated[updated.length - 1],
-              content: aiText,
-            };
-            return updated;
-          });
-        }
-      }
-
-      await new Promise((resolve) => setTimeout(resolve, 300));
-    } catch (err) {
-      console.error("Stream error:", err);
-      setMessages((prev) => {
-        const updated = [...prev];
-        updated[updated.length - 1] = {
-          ...updated[updated.length - 1],
-          content: "Sorry, I encountered an error. Please try again.",
-        };
-        return updated;
-      });
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: `error-${Date.now()}`,
+          role: "ai",
+          content: errorMsg,
+          timestamp: new Date(),
+        },
+      ]);
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   /* ================= EDIT MESSAGE ================= */
