@@ -1,7 +1,8 @@
 {
   "app": {
     "name": "Male Parikshan",
-    "tagline": "Strong Body. Calm Mind. Responsible Man."
+    "tagline": "Strong Body. Calm Mind. Responsible Man.",
+    "adultMode": "Adult Mode"
   },
   "nav": {
     "dashboard": "Dashboard",
@@ -60,7 +61,10 @@
     "dailyChallenge": "Daily Challenge",
     "drinkWater": "Drink water",
     "logMood": "Log mood",
-    "loginStreak": "Login Streak"
+    "loginStreak": "Login Streak",
+    "riskLevel": "Risk Level",
+    "keepUpGoodWork": "Keep up the good work!",
+    "loggedToday": "Logged today"
   },
   "streak": {
     "title": "NoFap Tracker",
@@ -123,7 +127,8 @@
     "normalSubtitle": "Swipe cards or use arrows · Tap dots to jump",
     "adultSubtitle": "Consent · Accountability · Self-Regulation",
     "noModules": "No modules yet",
-    "runSeed": "Run npm run seed in backend",
+    "runSeedLabel": "Run",
+    "runSeed": "in backend",
     "completed": "Completed",
     "markComplete": "Mark as Complete",
     "duration": "Duration"
@@ -131,7 +136,20 @@
   "chat": {
     "title": "AI Chat",
     "placeholder": "Ask me anything about men's health...",
+    "askPrefix": "Ask",
     "send": "Send",
+    "copy": "Copy",
+    "copied": "Copied!",
+    "edit": "Edit",
+    "save": "Save",
+    "cancel": "Cancel",
+    "edited": "(edited)",
+    "listenToResponse": "Listen to response",
+    "copyResponse": "Copy response",
+    "editMessage": "Edit message",
+    "attachFile": "Attach file",
+    "startRecording": "Start recording",
+    "stopRecording": "Stop recording",
     "thinking": "Thinking...",
     "normalMode": {
       "name": "BaalVeer",
@@ -193,7 +211,9 @@
     "switchToAdult": "Switching to Adult Mode",
     "switchToNormal": "Switching to Normal Mode",
     "loadingAdultContent": "Loading adult content...",
-    "loadingNormalContent": "Switching to standard content..."
+    "loadingNormalContent": "Switching to standard content...",
+    "normalMode": "Normal Mode",
+    "adultModeLabel": "Adult Mode"
   },
   "common": {
     "loading": "Loading...",

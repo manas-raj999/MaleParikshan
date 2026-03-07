@@ -40,7 +40,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   // Get nav item label with mode-specific overrides
   const getNavLabel = (key: string) => {
     if (key === 'chat') {
-      return isAdultMode ? 'MasterGogo' : 'BaalVeer'
+      return isAdultMode ? t('chat.adultMode.name') : t('chat.normalMode.name')
     }
     return t(`nav.${key}`)
   }
@@ -171,7 +171,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           {/* Logo */}
           <div className="p-6" style={{ borderBottom: '1px solid var(--sidebar-border)' }}>
             <Link to="/dashboard">
-              <h1 className="font-display text-xl font-bold text-gradient">{t('app.name')}</h1>
+              <h1 className="font-display text-xl font-bold text-gradient">Male परीक्षण</h1>
               <p className="text-xs mt-1 font-body leading-tight" style={{ color: 'var(--color-muted)' }}>
                 {t('app.tagline')}
               </p>
@@ -180,7 +180,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               <div className="mt-3 flex items-center gap-1.5 px-2.5 py-1 rounded-lg w-fit"
                 style={{ background: 'rgba(185,28,28,0.15)', border: '1px solid rgba(185,28,28,0.3)' }}>
                 <span className="text-xs">🔞</span>
-                <span className="text-xs font-body" style={{ color: '#fca5a5' }}>Adult Mode</span>
+                <span className="text-xs font-body" style={{ color: '#fca5a5' }}>{t('mode.adultModeLabel')}</span>
               </div>
             )}
           </div>
@@ -251,7 +251,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                       transition: 'left 300ms ease, background 300ms ease',
                     }} />
                 </div>
-                <span>{isAdultMode ? '🔞 Adult Mode' : '📖 Normal Mode'}</span>
+                <span>{isAdultMode ? '🔞 ' + t('mode.adultModeLabel') : '📖 ' + t('mode.normalMode')}</span>
               </button>
             </div>
 

@@ -307,7 +307,7 @@ export default function ModulesPage() {
         <div className="flex flex-col items-center justify-center py-20 gap-3">
           <p className="text-4xl">📚</p>
           <p className="font-display text-lg font-bold text-white">{t('modules.noModules')}</p>
-          <p className="text-muted text-sm font-body">Run <code className="text-accent bg-surface px-2 py-0.5 rounded">npm run seed</code> {t('modules.runSeed')}</p>
+          <p className="text-muted text-sm font-body">{t('modules.runSeedLabel')} <code className="text-accent bg-surface px-2 py-0.5 rounded">npm run seed</code> {t('modules.runSeed')}</p>
         </div>
       ) : (
         <div className="relative pb-2">

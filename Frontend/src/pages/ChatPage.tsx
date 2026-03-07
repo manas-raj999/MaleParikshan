@@ -456,7 +456,7 @@ const ChatPage = () => {
                         fontSize: "12px",
                       }}
                     >
-                      Save
+                      {t('chat.save')}
                     </button>
                     <button
                       onClick={() => setEditingId(null)}
@@ -470,7 +470,7 @@ const ChatPage = () => {
                         fontSize: "12px",
                       }}
                     >
-                      Cancel
+                      {t('chat.cancel')}
                     </button>
                   </div>
                 ) : (
@@ -494,7 +494,7 @@ const ChatPage = () => {
 
                     {msg.edited && msg.role === "user" && (
                       <span style={{ fontSize: "11px", opacity: 0.6, marginTop: "4px", display: "block" }}>
-                        (edited)
+                        {t('chat.edited')}
                       </span>
                     )}
                   </div>
@@ -504,7 +504,7 @@ const ChatPage = () => {
                   <div style={{ display: "flex", gap: "8px", marginTop: "4px" }}>
                     <button
                       onClick={() => speak(msg.content)}
-                      title="Listen to response"
+                      title={t('chat.listenToResponse')}
                       style={{
                         background: "transparent",
                         color: modeConfig.accent,
@@ -527,9 +527,9 @@ const ChatPage = () => {
                     <button
                       onClick={() => {
                         navigator.clipboard.writeText(msg.content);
-                        alert("Copied!");
+                        alert(t('chat.copied'));
                       }}
-                      title="Copy response"
+                      title={t('chat.copyResponse')}
                       style={{
                         background: "transparent",
                         color: modeConfig.accent,
@@ -555,7 +555,7 @@ const ChatPage = () => {
                 {msg.role === "user" && !editingId && (
                   <button
                     onClick={() => editMessage(msg.id, msg.content)}
-                    title="Edit message"
+                    title={t('chat.editMessage')}
                     style={{
                       background: "transparent",
                       color: modeConfig.accent,
@@ -573,7 +573,7 @@ const ChatPage = () => {
                       e.currentTarget.style.opacity = "1";
                     }}
                   >
-                    ✏️ Edit
+                    ✏️ {t('chat.edit')}
                   </button>
                 )}
               </div>
@@ -668,7 +668,7 @@ const ChatPage = () => {
         <div style={{ display: "flex", gap: "12px", alignItems: "flex-end" }}>
           <input
             type="text"
-            placeholder={`Ask ${modeConfig.name}...`}
+            placeholder={`${t('chat.askPrefix')} ${modeConfig.name}...`}
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => {
@@ -775,7 +775,7 @@ const ChatPage = () => {
               e.currentTarget.style.opacity = "1";
             }}
           >
-            {loading ? "..." : "Send"}
+            {loading ? "..." : t('chat.send')}
           </button>
         </div>
       </div>

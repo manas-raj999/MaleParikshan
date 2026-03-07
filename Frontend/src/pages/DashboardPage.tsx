@@ -107,7 +107,7 @@ export default function DashboardPage() {
                 <span className="font-display text-5xl font-bold text-white">{Math.round(healthScore)}</span>
               </div>
             </div>
-            <p className="text-muted font-body text-sm">Health Score</p>
+            <p className="text-muted font-body text-sm">{t('dashboard.healthScore')}</p>
           </div>
         </div>
 
@@ -115,7 +115,7 @@ export default function DashboardPage() {
         <div className="space-y-4">
           {/* Risk Level */}
           <div className="rounded-2xl p-6 h-32 flex flex-col justify-center" style={{ background: 'linear-gradient(135deg, rgba(59,130,246,0.08), rgba(99,102,241,0.05))', border: '1px solid rgba(99,102,241,0.15)' }}>
-            <p className="text-muted font-body text-xs uppercase tracking-widest mb-2">Risk Level</p>
+            <p className="text-muted font-body text-xs uppercase tracking-widest mb-2">{t('dashboard.riskLevel')}</p>
             <div className="flex items-center gap-2">
               <span className={`font-display text-2xl font-bold ${riskLevel.color}`}>{riskLevel.level}</span>
               <div className={`px-2 py-1 rounded-lg text-xs font-body ${riskLevel.color} opacity-70`} style={{ background: `${riskLevel.color}15` }}>
@@ -165,7 +165,7 @@ export default function DashboardPage() {
 
         {/* Progress Text */}
         <div className="flex items-center justify-between">
-          <p className="text-muted font-body text-sm">Keep up the good work!</p>
+          <p className="text-muted font-body text-sm">{t('dashboard.keepUpGoodWork')}</p>
           <p className="font-mono text-sm text-muted">{data?.streak?.current ?? 0} / {data?.streak?.target ?? 30}</p>
         </div>
       </div>
@@ -173,12 +173,12 @@ export default function DashboardPage() {
       {/* Today's Mood Section */}
       {currentMood && (
         <div className="rounded-2xl p-6" style={{ background: 'linear-gradient(135deg, rgba(139,92,246,0.08), rgba(168,85,247,0.05))', border: '1px solid rgba(139,92,246,0.15)' }}>
-          <p className="text-muted font-body text-xs uppercase tracking-widest mb-4">Today's Mood</p>
+          <p className="text-muted font-body text-xs uppercase tracking-widest mb-4">{t('dashboard.todayMood')}</p>
           <div className="flex items-center gap-4">
             <span className="text-6xl">{MOOD_EMOJI[currentMood] || '😐'}</span>
             <div>
               <p className="font-display text-2xl font-bold text-white capitalize">{currentMood}</p>
-              <p className="text-muted text-sm font-body">Logged today</p>
+              <p className="text-muted text-sm font-body">{t('dashboard.loggedToday')}</p>
             </div>
           </div>
         </div>

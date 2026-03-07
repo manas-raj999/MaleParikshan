@@ -1,7 +1,8 @@
 {
   "app": {
-    "name": "Male Parikshan",
-    "tagline": "स्वस्थ शरीर। शांत मन। जिम्मेदार इंसान।"
+    "name": "पुरुष परीक्षण",
+    "tagline": "स्वस्थ शरीर। शांत मन। जिम्मेदार इंसान।",
+    "adultMode": "वयस्क मोड"
   },
   "nav": {
     "dashboard": "डैशबोर्ड",
@@ -60,7 +61,10 @@
     "dailyChallenge": "दैनिक चुनौती",
     "drinkWater": "पानी पिएं",
     "logMood": "मूड दर्ज करें",
-    "loginStreak": "लॉगिन स्ट्रीक"
+    "loginStreak": "लॉगिन स्ट्रीक",
+    "riskLevel": "जोखिम स्तर",
+    "keepUpGoodWork": "अच्छा काम करते रहो!",
+    "loggedToday": "आज दर्ज किया गया"
   },
   "streak": {
     "title": "NoFap ट्रैकर",
@@ -123,7 +127,8 @@
     "normalSubtitle": "कार्डों को स्वाइप करें या तीर का उपयोग करें · कूदने के लिए डॉट्स पर टैप करें",
     "adultSubtitle": "सहमति · जवाबदेही · आत्म-विनियमन",
     "noModules": "अभी कोई मॉड्यूल नहीं",
-    "runSeed": "बैकएंड में npm run seed चलाएं",
+    "runSeedLabel": "चलाएं",
+    "runSeed": "बैकएंड में",
     "completed": "पूर्ण",
     "markComplete": "पूर्ण के रूप में चिह्नित करें",
     "duration": "अवधि"
@@ -131,7 +136,20 @@
   "chat": {
     "title": "AI चैट",
     "placeholder": "पुरुष स्वास्थ्य के बारे में कुछ भी पूछें...",
+    "askPrefix": "पूछें",
     "send": "भेजें",
+    "copy": "कॉपी",
+    "copied": "कॉपी हो गया!",
+    "edit": "संपादित करें",
+    "save": "सहेजें",
+    "cancel": "रद्द करें",
+    "edited": "(संपादित)",
+    "listenToResponse": "प्रतिक्रिया सुनें",
+    "copyResponse": "प्रतिक्रिया कॉपी करें",
+    "editMessage": "संदेश संपादित करें",
+    "attachFile": "फ़ाइल संलग्न करें",
+    "startRecording": "रिकॉर्डिंग शुरू करें",
+    "stopRecording": "रिकॉर्डिंग बंद करें",
     "thinking": "सोच रहा हूँ...",
     "normalMode": {
       "name": "बालवीर",
@@ -193,7 +211,9 @@
     "switchToAdult": "वयस्क मोड में स्विच किया जा रहा है",
     "switchToNormal": "सामान्य मोड में स्विच किया जा रहा है",
     "loadingAdultContent": "वयस्क सामग्री लोड हो रही है...",
-    "loadingNormalContent": "मानक सामग्री में स्विच किया जा रहा है..."
+    "loadingNormalContent": "मानक सामग्री में स्विच किया जा रहा है...",
+    "normalMode": "सामान्य मोड",
+    "adultModeLabel": "वयस्क मोड"
   },
   "common": {
     "loading": "लोड हो रहा है...",
