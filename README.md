@@ -94,4 +94,4 @@ A single `ModeContext` toggle sets a `data-mode` attribute on `<html>`. CSS vari
 
 ---
 
-*Made with ❤️ for India Indian Men*
+*Made with ❤️ for our Indian Men*
