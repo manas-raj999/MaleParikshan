@@ -27,14 +27,15 @@
 - **Adult Mode** — age-verified (18+), server-enforced, consent-first
 - **Guest Mode** — explore without an account
 - **Dual Theme** — one toggle switches the entire app, no reload
+- **Language Support** - one toggle that switches the entire app language from english to hindi and vice versa
 
 ---
 
 ## Dashboard
 
-| Normal Mode | Adult Mode |
+| Normal Mode (Dashboard) | Adult Mode (AI Chat) |
 |:-----------:|:----------:|
-| ![Dashboard Normal](screenshots/dashboard-normal.png) | ![Dashboard Adult](screenshots/dashboard-adult.png) |
+| ![Dashboard Normal](Frontend/SS/Dashboard%20-%20Normal%20Mode.png) | ![AI Assistance for Adults](Frontend/SS/AI%20Chat%20-%20Red%20Mode.png) |
 
 ---
 
@@ -93,4 +94,4 @@ A single `ModeContext` toggle sets a `data-mode` attribute on `<html>`. CSS vari
 
 ---
 
-*Made at KIIT University for India Innovates 2026*
+*Made with ❤️ for our Indian Men*
