@@ -33,9 +33,9 @@
 
 ## Dashboard
 
-| Normal Mode | Adult Mode |
+| Normal Mode (Dashboard) | Adult Mode (AI Chat) |
 |:-----------:|:----------:|
-| ![Dashboard Normal](SS/Dashboard%20-%20Normal%20Mode.png) | ![AI Assistance for Adults](SS/AI%20Chat%20-%20Red%20Mode.png) |
+| ![Dashboard Normal](Frontend/SS/Dashboard%20-%20Normal%20Mode.png) | ![AI Assistance for Adults](Frontend/SS/AI%20Chat%20-%20Red%20Mode.png) |
 
 ---
 
@@ -94,4 +94,4 @@ A single `ModeContext` toggle sets a `data-mode` attribute on `<html>`. CSS vari
 
 ---
 
-*Made at KIIT University for India Innovates 2026*
+*Made with ❤️ for India Indian Men*
