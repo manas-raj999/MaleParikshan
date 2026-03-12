@@ -27,6 +27,7 @@
 - **Adult Mode** — age-verified (18+), server-enforced, consent-first
 - **Guest Mode** — explore without an account
 - **Dual Theme** — one toggle switches the entire app, no reload
+- **Language Support** - one toggle that switches the entire app language from english to hindi and vice versa
 
 ---
 
@@ -34,7 +35,7 @@
 
 | Normal Mode | Adult Mode |
 |:-----------:|:----------:|
-| ![Dashboard Normal](screenshots/dashboard-normal.png) | ![Dashboard Adult](screenshots/dashboard-adult.png) |
+| ![Dashboard Normal](SS/Dashboard%20-%20Normal%20Mode.png) | ![AI Assistance for Adults](SS/AI%20Chat%20-%20Red%20Mode.png) |
 
 ---
 
